@@ -27,6 +27,10 @@ body {
 }
 .country-name{
   display: flex;
-  align-items: center;
+  align-items: baseline;
+}
+.country-list, .country_info-list{
+  list-style: none;
+  padding: 0;
   
 }

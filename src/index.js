@@ -15,9 +15,16 @@ refs.searchInput.addEventListener(
   'input',
   debounce(searchHandler, DEBOUNCE_DELAY)
 );
-
-function searchHandler() {
-  inputData = refs.searchInput.value;
+function cleanInput() {
+  refs.countryList.innerHTML = '';
+  refs.countryInfoContainer.innerHTML = '';
+}
+function searchHandler(evt) {
+  cleanInput();
+  inputData = evt.target.value.trim();
+  if (inputData === '') {
+    return;
+  }
   API.fetchCountries(inputData).then(renderCountriesCard).catch(onFetchError);
 }
 
@@ -36,18 +43,22 @@ function renderingMarkupOfOneCountry(countries) {
   <h3 class = "country-name"><img class = "country-icon" src = "${
     countries[0].flags.svg
   }"/>${countries[0].name.official}</h3> 
-    <ul style="list-style: none ;" class = "country_info-list">
-    <li>Capital: <span>${countries[0].capital[0]}</span></li>
-    <li>population: <span>${countries[0].population}</span></li>
-    <li>languages: <span>${Object.values(countries[0].languages).join(
+    <ul class = "country_info-list">
+    <li><b>Capital:</b><span> ${countries[0].capital[0]}</span></li>
+    <li><b>Population:</b><span> ${countries[0].population}</span></li>
+    <li><b>Languages:</b><span> ${Object.values(countries[0].languages).join(
       ', '
     )}</span></li>  </ul>`;
 
   refs.countryInfoContainer.innerHTML = countryInfoMarkup;
+  refs.countryList.innerHTML = '';
 }
 
 function onFetchError(error) {
-  Notiflix.Notify.failure('Oops, there is no country with that name');
+  Notiflix.Notify.failure('Oops, there is no country with that name'),
+    {
+      timeout: 2000,
+    };
 }
 
 function renderingMarkupOfCountries(countries) {
@@ -63,10 +74,14 @@ function renderingMarkupOfCountries(countries) {
     'afterbegin',
     countriesListMArkup(countries)
   );
+  refs.countryInfoContainer.innerHTML = '';
 }
 
 function toManyCountriesError(error) {
   Notiflix.Notify.failure(
-    'Too many matches found. Please enter a more specific name.'
+    'Too many matches found. Please enter a more specific name.',
+    {
+      timeout: 2000,
+    }
   );
 }
