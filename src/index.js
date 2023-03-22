@@ -59,6 +59,7 @@ function onFetchError(error) {
     {
       timeout: 2000,
     };
+  cleanInput();
 }
 
 function renderingMarkupOfCountries(countries) {
@@ -78,10 +79,10 @@ function renderingMarkupOfCountries(countries) {
 }
 
 function toManyCountriesError(error) {
-  Notiflix.Notify.failure(
+  Notiflix.Notify.info(
     'Too many matches found. Please enter a more specific name.',
     {
-      timeout: 2000,
+      timeout: 700,
     }
   );
 }
